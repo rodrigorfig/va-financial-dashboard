@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Vaca Argentina</title>
 
 <link rel="manifest" href="manifest.json">
@@ -10,17 +12,72 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vaca Argentina">
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  window.location.replace(
-    "https://script.google.com/macros/s/AKfycbyPCFg6d1apnT3w9ujlA5oKzR4td9IsGQQYtIbyw7IJbj7zWcnZMAJAgUt7rMuRwtvj/exec"
-  );
-});
-</script>
+<style>
+body{
+font-family: system-ui;
+margin:20px;
+background:#121212;
+color:white;
+}
+.card{
+background:#1f1f1f;
+padding:20px;
+border-radius:10px;
+margin-bottom:15px;
+}
+.value{
+font-size:28px;
+font-weight:bold;
+}
+</style>
 
 </head>
 
 <body>
-Loading...
+
+<h2>Finance Dashboard</h2>
+
+<div class="card">
+Receitas
+<div class="value" id="receitas">Loading...</div>
+</div>
+
+<div class="card">
+Despesas
+<div class="value" id="despesas">Loading...</div>
+</div>
+
+<div class="card">
+Lucro
+<div class="value" id="lucro">Loading...</div>
+</div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbyPCFg6d1apnT3w9ujlA5oKzR4td9IsGQQYtIbyw7IJbj7zWcnZMAJAgUt7rMuRwtvj/exec";
+
+fetch(API)
+.then(r => r.json())
+.then(data => {
+
+document.getElementById("receitas").innerText =
+data.currentMonth.receitas.toFixed(2);
+
+document.getElementById("despesas").innerText =
+data.currentMonth.despesas.toFixed(2);
+
+document.getElementById("lucro").innerText =
+data.currentMonth.lucro.toFixed(2);
+
+})
+.catch(err => {
+
+document.body.innerHTML =
+"Login required. Open the dashboard once in browser.";
+
+});
+
+</script>
+
 </body>
 </html>
