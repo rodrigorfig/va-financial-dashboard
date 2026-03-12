@@ -56,32 +56,39 @@ Lucro
 <div class="value" id="lucro">Loading...</div>
 </div>
 
-<script>
 
+<script>
 const API = "https://script.google.com/macros/s/AKfycbyPCFg6d1apnT3w9ujlA5oKzR4td9IsGQQYtIbyw7IJbj7zWcnZMAJAgUt7rMuRwtvj/exec";
 
+function updateDashboard(data) {
+  document.getElementById("receitas").innerText = data.currentMonth.receitas.toFixed(2);
+  document.getElementById("despesas").innerText = data.currentMonth.despesas.toFixed(2);
+  document.getElementById("lucro").innerText = data.currentMonth.lucro.toFixed(2);
+  
+  // Save last fetched data
+  localStorage.setItem("lastData", JSON.stringify(data.currentMonth));
+}
+
+// Load last cached data if available
+const cached = localStorage.getItem("lastData");
+if (cached) {
+  const data = { currentMonth: JSON.parse(cached) };
+  updateDashboard(data);
+}
+
 fetch(API)
-.then(r => r.json())
-.then(data => {
-
-document.getElementById("receitas").innerText =
-data.currentMonth.receitas.toFixed(2);
-
-document.getElementById("despesas").innerText =
-data.currentMonth.despesas.toFixed(2);
-
-document.getElementById("lucro").innerText =
-data.currentMonth.lucro.toFixed(2);
-
-})
-.catch(err => {
-
-document.body.innerHTML =
-"Login required. Open the dashboard once in browser.";
-
-});
-
+  .then(r => r.json())
+  .then(data => {
+    updateDashboard(data);
+  })
+  .catch(err => {
+    console.warn("Failed to fetch new data, showing cached values if any.");
+    if (!cached) {
+      document.body.innerHTML = "Login required. Open the dashboard once in browser.";
+    }
+  });
 </script>
+  
 
 </body>
 </html>
